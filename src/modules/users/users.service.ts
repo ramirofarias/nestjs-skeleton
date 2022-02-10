@@ -1,8 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import LoginDto from 'src/auth/dto/login.dto';
-import { comparePasswords, hashPassword } from 'src/shared/utils/bcrypt';
-import { Equal, Repository } from 'typeorm';
+import { hashPassword } from 'src/shared/utils/bcrypt';
+import { Repository } from 'typeorm';
 import { Role } from '../roles/entities/role.entity';
 import { Roles } from '../roles/entities/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,26 +30,35 @@ export class UsersService {
     }
 
     const password = hashPassword(req.password);
-
-    let roles = [];
-    if (!req.roles) {
-      roles = [await this.rolesRepository.findOne(Roles.USUARIO)];
-    } else {
-      for (const role in req.roles) {
-        const createdRole = await this.rolesRepository.findOne({
-          name: req.roles[role],
-        });
-        if (createdRole) {
-          roles.push(createdRole);
-        } else {
-          throw new BadRequestException('El rol no existe');
-        }
-      }
-    }
+    const roles: Role[] = await this.assignRoles(req);
 
     const user = this.usersRepository.create({ ...req, password, roles });
 
     return this.usersRepository.save(user);
+  }
+
+  private async assignRoles(req: CreateUserDto) {
+    let roles: Role[];
+    if (!req.roles) {
+      roles = [await this.rolesRepository.findOne(Roles.USUARIO)];
+    } else {
+      roles = await this.parseRoleRequest(req);
+    }
+    return roles;
+  }
+
+  private async parseRoleRequest(req: CreateUserDto) {
+    const roles = await this.rolesRepository
+      .createQueryBuilder('roles')
+      .where('roles.name IN (:...roleNames)', {
+        roleNames: req.roles,
+      })
+      .getMany();
+    if (req.roles.length === roles.length) {
+      return roles;
+    } else {
+      throw new UnprocessableEntityException('El rol no existe');
+    }
   }
 
   findAll() {
