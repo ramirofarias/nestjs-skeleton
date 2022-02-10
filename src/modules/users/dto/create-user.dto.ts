@@ -5,6 +5,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
+import { Role, RoleName } from 'src/modules/roles/entities/role.entity';
 
 export class CreateUserDto {
   @IsEmail(
@@ -26,4 +27,7 @@ export class CreateUserDto {
   firstName: string;
   @IsOptional()
   lastName: string;
+
+  @IsOptional()
+  roles: RoleName[];
 }

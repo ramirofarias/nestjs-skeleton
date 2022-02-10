@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 const config: PostgresConnectionOptions = {
@@ -8,7 +9,7 @@ const config: PostgresConnectionOptions = {
   password: 'root',
   database: 'baseline',
   synchronize: true,
-  entities: ['dist/src/**/*.entity.js'],
+  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
   migrations: ['dist/src/db/migrations/*.js'],
   cli: {
     migrationsDir: 'src/db/migrations',

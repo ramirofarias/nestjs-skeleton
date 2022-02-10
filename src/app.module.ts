@@ -3,12 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import config from 'ormconfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { SeedersModule } from './shared/seeders/seeders.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { UsersModule } from './modules/users/users.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     UsersModule,
     SeedersModule,
     AuthModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [
