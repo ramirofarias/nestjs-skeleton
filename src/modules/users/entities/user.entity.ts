@@ -2,11 +2,13 @@ import { Exclude } from 'class-transformer';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('users')
@@ -31,10 +33,10 @@ export class User {
   @JoinTable()
   roles: Role[];
 
-  @Column({ type: 'timestamp', name: 'created_at', nullable: true })
+  @CreateDateColumn()
   createdAt: string;
 
-  @Column({ type: 'timestamp', name: 'updated_at', nullable: true })
+  @UpdateDateColumn()
   updatedAt: string;
 
   @DeleteDateColumn()

@@ -15,12 +15,22 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  public relations = ['roles'];
+
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
   ) {}
 
   async create(req: CreateUserDto) {
+    await this.checkIfUserExists(req);
+    const password = hashPassword(req.password);
+    const roles: Role[] = await this.assignRoles(req);
+    const user = this.usersRepository.create({ ...req, password, roles });
+    return this.usersRepository.save(user);
+  }
+
+  private async checkIfUserExists(req: CreateUserDto) {
     const users = await this.usersRepository.find({
       email: req.email,
     });
@@ -28,13 +38,6 @@ export class UsersService {
     if (users.length) {
       throw new BadRequestException('El usuario ya existe');
     }
-
-    const password = hashPassword(req.password);
-    const roles: Role[] = await this.assignRoles(req);
-
-    const user = this.usersRepository.create({ ...req, password, roles });
-
-    return this.usersRepository.save(user);
   }
 
   private async assignRoles(req: CreateUserDto) {
@@ -62,11 +65,18 @@ export class UsersService {
   }
 
   findAll() {
-    return this.usersRepository.find({ relations: ['roles'] });
+    return this.usersRepository.find({
+      relations: this.relations,
+      withDeleted: true,
+    });
   }
 
   findOne(id: number) {
-    return this.usersRepository.findOne({ id });
+    return this.usersRepository.findOne({
+      where: { id: id },
+      relations: this.relations,
+      withDeleted: true,
+    });
   }
 
   findByEmail(req: EmailDto) {

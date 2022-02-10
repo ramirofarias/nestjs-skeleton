@@ -18,7 +18,7 @@ export class RolesService {
   }
 
   findAll() {
-    return `This action returns all roles`;
+    return this.rolesRepository.find();
   }
 
   findOne(id: number) {
