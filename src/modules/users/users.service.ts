@@ -4,6 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from 'src/mail/mail.service';
 import { hashPassword } from 'src/shared/utils/bcrypt';
 import { Repository } from 'typeorm';
 import { Role } from '../roles/entities/role.entity';
@@ -20,6 +21,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(req: CreateUserDto) {
@@ -27,6 +29,8 @@ export class UsersService {
     const password = hashPassword(req.password);
     const roles: Role[] = await this.assignRoles(req);
     const user = this.usersRepository.create({ ...req, password, roles });
+    const token = 'asdasd';
+    this.mailService.sendUserConfirmationEmail(user, token);
     return this.usersRepository.save(user);
   }
 

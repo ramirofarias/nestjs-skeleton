@@ -11,6 +11,9 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UsersModule } from './modules/users/users.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { CaslModule } from './casl/casl.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +27,7 @@ import { CaslModule } from './casl/casl.module';
     AuthModule,
     RolesModule,
     CaslModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [
