@@ -80,8 +80,13 @@ export class UsersService {
   }
 
   findByEmail(req: EmailDto) {
-    const users = this.usersRepository.createQueryBuilder('user');
-    return users.where('user.email = :email', { email: req.email }).getOne();
+    const user = this.usersRepository.findOne({
+      where: {
+        email: req.email,
+      },
+      relations: this.relations,
+    });
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
