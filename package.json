@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@casl/ability": "^5.4.3",
+    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.0.0",
@@ -35,6 +36,8 @@
     "@nestjs/typeorm": "^8.0.3",
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.0.1",
+    "handlebars": "^4.7.7",
+    "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
