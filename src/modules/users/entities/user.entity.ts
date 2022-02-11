@@ -1,5 +1,6 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { Role } from 'src/modules/roles/entities/role.entity';
+import { Roles } from 'src/modules/roles/entities/roles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -41,4 +42,16 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Expose()
+  get fullName(): string {
+    return this.lastName
+      ? `${this.firstName} ${this.lastName}`
+      : this.firstName;
+  }
+
+  @Expose()
+  get isAdmin(): boolean {
+    return this.roles.some((role: Role) => role.id === Roles.ADMINISTRADOR);
+  }
 }

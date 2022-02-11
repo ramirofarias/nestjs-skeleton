@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UsersModule } from './modules/users/users.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RolesModule } from './modules/roles/roles.module';
     SeedersModule,
     AuthModule,
     RolesModule,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [
