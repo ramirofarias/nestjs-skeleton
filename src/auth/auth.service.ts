@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import LoginDto from './dto/login.dto';
-import { comparePasswords } from '../shared/utils/bcrypt';
+import { passwordIsCorrect } from '../shared/utils/bcrypt';
 import { UsersService } from 'src/modules/users/users.service';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 
@@ -25,14 +25,8 @@ export class AuthService {
 
   public async validateUser(request: LoginDto) {
     const user = await this.usersService.findByEmail({ email: request.email });
-    if (!user) {
-      return null;
-    } else {
-      if (comparePasswords(request.password, user.password)) {
-        return user;
-      } else {
-        return null;
-      }
-    }
+    if (user && passwordIsCorrect(request.password, user.password)) {
+      return user;
+    } else throw new UnauthorizedException('Credenciales incorrectas');
   }
 }
