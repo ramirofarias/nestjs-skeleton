@@ -13,7 +13,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors();
-
+  console.log(process.env);
   await app.listen(3333);
 }
 bootstrap();
