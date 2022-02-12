@@ -15,6 +15,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailModule } from './mail/mail.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       verboseMemoryLeak: false,
       ignoreErrors: false,
     }),
-
+    ScheduleModule.forRoot(),
     UsersModule,
     SeedersModule,
     AuthModule,
