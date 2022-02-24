@@ -1,6 +1,5 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { Role } from 'src/modules/roles/entities/role.entity';
-import { Roles } from 'src/modules/roles/entities/roles.enum';
+import { Role } from '../../roles/entities/role.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Roles } from '../../roles/entities/roles.enum';
 
 @Entity('users')
 export class User {

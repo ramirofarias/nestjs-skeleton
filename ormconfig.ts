@@ -1,19 +1,9 @@
-import { join } from 'path';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { ConfigModule } from '@nestjs/config';
+import dbConfiguration from './src/db/database.provider';
 
-const config: PostgresConnectionOptions = {
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'root',
-  database: 'baseline',
-  synchronize: true,
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-  migrations: ['dist/src/db/migrations/*.js'],
-  cli: {
-    migrationsDir: 'src/db/migrations',
-  },
-};
+ConfigModule.forRoot({
+  isGlobal: true,
+  load: [dbConfiguration],
+});
 
-export default config;
+export default dbConfiguration();

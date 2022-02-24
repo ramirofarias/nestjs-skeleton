@@ -3,7 +3,9 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from 'src/mail/mail.service';
 import { hashPassword } from 'src/shared/utils/bcrypt';
 import { Repository } from 'typeorm';
 import { Role } from '../roles/entities/role.entity';
@@ -20,6 +22,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
+    private readonly eventService: EventEmitter2,
   ) {}
 
   async create(req: CreateUserDto) {
@@ -27,6 +30,7 @@ export class UsersService {
     const password = hashPassword(req.password);
     const roles: Role[] = await this.assignRoles(req);
     const user = this.usersRepository.create({ ...req, password, roles });
+    this.eventService.emit('user.created', user);
     return this.usersRepository.save(user);
   }
 

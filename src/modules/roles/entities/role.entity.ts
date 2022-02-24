@@ -1,5 +1,6 @@
 import { type } from 'os';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+User;
 import {
   Column,
   Entity,
